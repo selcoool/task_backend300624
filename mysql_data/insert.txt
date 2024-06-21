@@ -1,0 +1,55 @@
+use anh;
+-- Insert data into nguoi_dung table
+INSERT INTO nguoi_dung (email, mat_khau, ho_ten, tuoi, anh_dai_dien) VALUES
+('user1@example.com', 'password1', 'User One', 25, 'avatar1.jpg'),
+('user2@example.com', 'password2', 'User Two', 30, 'avatar2.jpg'),
+('user3@example.com', 'password3', 'User Three', 28, 'avatar3.jpg'),
+('user4@example.com', 'password4', 'User Four', 22, 'avatar4.jpg'),
+('user5@example.com', 'password5', 'User Five', 35, 'avatar5.jpg'),
+('user6@example.com', 'password6', 'User Six', 27, 'avatar6.jpg'),
+('user7@example.com', 'password7', 'User Seven', 33, 'avatar7.jpg'),
+('user8@example.com', 'password8', 'User Eight', 29, 'avatar8.jpg'),
+('user9@example.com', 'password9', 'User Nine', 26, 'avatar9.jpg'),
+('user10@example.com', 'password10', 'User Ten', 31, 'avatar10.jpg');
+
+-- Insert data into hinh_anh table
+INSERT INTO hinh_anh (ten_hinh, duong_dan, mo_ta, nguoi_dung_id) VALUES
+('Picture 1', 'path1.jpg', 'Description 1', 1),
+('Picture 2', 'path2.jpg', 'Description 2', 2),
+('Picture 3', 'path3.jpg', 'Description 3', 3),
+('Picture 4', 'path4.jpg', 'Description 4', 4),
+('Picture 5', 'path5.jpg', 'Description 5', 5),
+('Picture 6', 'path6.jpg', 'Description 6', 6),
+('Picture 7', 'path7.jpg', 'Description 7', 7),
+('Picture 8', 'path8.jpg', 'Description 8', 8),
+('Picture 9', 'path9.jpg', 'Description 9', 9),
+('Picture 10', 'path10.jpg', 'Description 10', 10);
+
+-- Insert data into luu_anh table
+INSERT INTO luu_anh (nguoi_dung_id, hinh_id, ngay_luu) VALUES
+(1, 1, '2023-06-01 10:00:00'),
+(2, 2, '2023-06-02 11:00:00'),
+(3, 3, '2023-06-03 12:00:00'),
+(4, 4, '2023-06-04 13:00:00'),
+(5, 5, '2023-06-05 14:00:00'),
+(6, 6, '2023-06-06 15:00:00'),
+(7, 7, '2023-06-07 16:00:00'),
+(8, 8, '2023-06-08 17:00:00'),
+(9, 9, '2023-06-09 18:00:00'),
+(10, 10, '2023-06-10 19:00:00');
+
+-- Insert data into binh_luan table
+INSERT INTO binh_luan (nguoi_dung_id, hinh_id, ngay_binh_luan, noi_dung) VALUES
+(1, 1, '2023-06-01 10:05:00', 'Nice picture!'),
+(2, 2, '2023-06-02 11:10:00', 'Great shot!'),
+(3, 3, '2023-06-03 12:15:00', 'Amazing!'),
+(4, 4, '2023-06-04 13:20:00', 'Beautiful!'),
+(5, 5, '2023-06-05 14:25:00', 'Wonderful!'),
+(6, 6, '2023-06-06 15:30:00', 'Stunning!'),
+(7, 7, '2023-06-07 16:35:00', 'Incredible!'),
+(8, 8, '2023-06-08 17:40:00', 'Fantastic!'),
+(9, 9, '2023-06-09 18:45:00', 'Excellent!'),
+(10, 10, '2023-06-10 19:50:00', 'Awesome!');
+
+
+--env-file=.env
