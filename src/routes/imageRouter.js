@@ -1,5 +1,5 @@
 import express from "express";
-import {getAllImage,addImage,deleteImage,updateImage,getOneImageByImageId,getOneImageByUserId,findImageByImageName} from "../controllers/imageController.js"
+import {getAllImage,addImage,deleteImage,updateImage,getOneImageByImageId,getOneImageByUserId,findImageByImageName,saveImage,getAllSavedImageByUserId} from "../controllers/imageController.js"
 import { getDrive, uploadFilesMiddleware } from '../googleDrive.js';
 
 
@@ -17,7 +17,10 @@ imageRouter.post("/them-hinh-anh",uploadFilesMiddleware, addImage)
 
 imageRouter.put("/sua-hinh-anh",uploadFilesMiddleware, updateImage)
 imageRouter.delete("/xoa-hinh-anh/:hinh_id", deleteImage)
-// imageRouter.put("/cap-nhat",uploadFilesMiddleware, updateImage)
+
+
+imageRouter.post("/luu-hinh-anh", saveImage)
+imageRouter.get("/tat-ca-hinh-anh-da-luu-dua-nguoi-dung-id/:nguoi_dung_id", getAllSavedImageByUserId)
 // userRouter.post("/dang-nhap", loginUser)
 // userRouter.delete("/xoa-nguoi-dung/:email/:nguoi_dung_id", deleteUser)
 // userRouter.post("/dang-xuat", signOutUser)

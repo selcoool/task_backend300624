@@ -16,7 +16,13 @@ const getAllUser = async (req, res) => {
 
         let data_getAllUser = await model.nguoi_dung.findAll({
             
-            include: ['hinh_anhs']
+            // include: ['hinh_anhs']
+            include: [
+                {
+                   model: model.hinh_anh,
+                   as: 'hinh_anhs'
+                }
+            ],
         });
 
 
@@ -39,7 +45,13 @@ const getOneUser = async (req, res) => {
 
         let data_getOneUser = await model.nguoi_dung.findAll({
             where: { nguoi_dung_id: nguoi_dung_id },
-            include: ['hinh_anhs'],
+            // include: ['hinh_anhs'],
+            include: [
+                {
+                   model: model.hinh_anh,
+                   as: 'hinh_anhs'
+                }
+            ],
             raw: true, nest: true,
         });
 
@@ -64,7 +76,7 @@ const generateAccessToken = (checkUser) => {
         tuoi: checkUser.tuoi,
 
 
-    }, process.env.JWT_ACCESS_KEY, { expiresIn: '10s' })
+    }, process.env.JWT_ACCESS_KEY, { expiresIn: '60s' })
 }
 
 
@@ -676,81 +688,6 @@ const requestRefreshToken = async (req, res) => {
 
 
 }
-
-
-
-
-// export const requestRefreshToken  =(req,res)=>new Promise(async(resolve, reject)=>{
-//     try {
-        
-//         // const refreshToken = req.cookies.refresh_token
-
-//         const refreshToken = req.body.refresh_token
-    
-//        jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, function (err, user) {
-//         if (err) {
-//             // return res.status(404).json('Access token đã sai hoặc không còn thời gian sử dụng')
-//             responseData("404", res, "post", null, "Access token đã sai hoặc không còn thời gian sử dụng")
-
-          
-//         }
-      
-//         const newAccessToken=generateAccessToken(user)
-//         const newRefreshToken=generateRefreshToken(user)
-      
-
-//         res.cookie('access_token', newAccessToken, {
-//             // expires: new Date (
-//             //     Date.now() + process.env.EXPIRE_IN * 24 * 60 * 60 * 1000
-//             //     ),
-//             httpOnly: true,
-//             secure: true,
-//             // // sameSite: 'strict',
-//             path: '/',
-//             sameSite: "None"
-//         })
-        
-//         res.cookie('refresh_token', newRefreshToken, {
-//             // expires: new Date (
-//             //     Date.now() + process.env.EXPIRE_IN * 24 * 60 * 60 * 1000
-//             //     ),
-//             httpOnly: true,
-//             secure: true,
-//             // // sameSite: 'strict',
-//             path: '/',
-//             sameSite: "None"
-//         })
-
-//         // resolve({
-//         //     error:user ? 0 : 1, 
-//         //     message:user ? 'Bạn đã yêu cầu access_token mới thành công' : 'Yêu cầu access_token thất bại, vui lòng kiểm tra lại',
-//         //     access_token:newAccessToken ? `Bearer ${newAccessToken}`:null,
-//         //     refresh_token:newRefreshToken ? `Bearer ${newRefreshToken}`:null
-//         // })
-//         // console.log(user)
-//         // {
-//         //     id: '64e5c73c63068380d6576094',
-//         //     isAdmin: false,
-//         //     iat: 1692789058,
-//         //     exp: 1692789118
-//         //   }
-
-      
-//     });
-
-   
-       
-//     } catch (error) {
-//          reject({
-//             error:1, 
-//             message:error
-        
-//         })
-    
-//     }
-// })
-
-
 
 
 

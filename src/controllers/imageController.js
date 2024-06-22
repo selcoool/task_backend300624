@@ -15,7 +15,12 @@ const getAllImage = async (req, res) => {
     try {
 
         let data_getAllImage = await model.hinh_anh.findAll({
-            include: ['nguoi_dung']
+            include: [
+                {
+                    model: model.nguoi_dung,
+                    as: 'nguoi_dung'
+                }
+            ],
         });
 
 
@@ -40,7 +45,14 @@ const getOneImageByImageId = async (req, res) => {
 
         let data_getOneImageByImageId= await model.hinh_anh.findAll({
             where: { hinh_id: hinh_id },
-            include: ['binh_luans'],
+            include: [
+                {
+                   model: model.binh_luan,
+                   as: 'binh_luans'
+                }
+            ],
+          
+            // include: ['binh_luans'],
             nest: true
         });
 
@@ -65,7 +77,13 @@ const getOneImageByUserId = async (req, res) => {
 
         let data_getOneImageByImageId= await model.hinh_anh.findAll({
             where: { nguoi_dung_id: nguoi_dung_id },
-            include: ['nguoi_dung'],
+            include: [
+                {
+                   model: model.nguoi_dung,
+                   as: 'nguoi_dung'
+                }
+            ],
+            // include: ['nguoi_dung'],
              nest: true,
         });
 
@@ -378,238 +396,123 @@ const deleteImage = async (req, res) => {
 };
 
 
-// const updateImage = async (req, res) => {
-//     try {
-//         const drive = getDrive();
-//         const dataBody = req.body;
-//         const { nguoi_dung_id } = req.body;
 
-//         const image = req.files?.duong_dan;
+const saveImage = async (req, res) => {
+    try {
+        const { hinh_id, nguoi_dung_id } = req.body;
+
+        const data_Image = await model.hinh_anh.findOne({
+            where: { hinh_id: hinh_id },
+        });
+
+        if (!data_Image) {
+            return responseData(404, res, "post", null, "Không tìm thấy hình ảnh");
+        }
+
+        const data_User = await model.nguoi_dung.findOne({
+            where: { nguoi_dung_id: nguoi_dung_id },
+        });
+
+        if (!data_User) {
+            return responseData(404, res, "post", null, "Không tìm thấy người dùng");
+        }
        
 
-//         // console.log('sssssssss',avatar &&  avatar.length>0)
-//         let data_Image = await model.hinh_anh.findOne({
-//             where: { 
-//                 email: email, 
-//             }
-//         });
+        if(data_User && data_Image){
+            // const data_saveImage = await model.luu_anh.create({
+            //     nguoi_dung_id: nguoi_dung_id,
+            //     hinh_id: hinh_id,
+            //     ngay_luu: new Date(),
+            // });
 
-//         if (!data_Image) {
-//             return responseData("400", res, "post", null, "Không tồn tại hình ảnh này");
-//         }
-
-//         // if (image && image.length > 0) {
-
+            let existingRecord = await model.luu_anh.findOne({
+                where: {
+                    nguoi_dung_id: nguoi_dung_id,
+                    hinh_id: hinh_id
+                }
+            });
+            
+            if (!existingRecord) {
+                let data_saveImage = await model.luu_anh.create({
+                    nguoi_dung_id: nguoi_dung_id,
+                    hinh_id: hinh_id,
+                    ngay_luu: new Date()
+                });
+                return responseData(200, res, "post", data_saveImage, "Đã lưu hình ảnh thành công");
+            } else {
+                return responseData(403, res, "post", null, "Hình ảnh đã được lưu trước đó");
+            }
+    
           
-//         //         for (const file of avatar) {
-//         //             const bufferStream = new Readable();
-//         //             bufferStream.push(file.buffer);
-//         //             bufferStream.push(null);
-    
-//         //             let response_create = await drive.files.create({
-//         //                 requestBody: {
-//         //                     name: file.originalname,
-//         //                     parents: ["1q_oPecVEnB4_7V1HHOegwzaVmTNmFVx_"]
-//         //                 },
-//         //                 media: {
-//         //                     mimeType: file.mimetype,
-//         //                     body: bufferStream,
-//         //                 },
-//         //                 fields: '*'
-//         //             });
-    
-//         //             if (data_User.anh_dai_dien) {
-//         //                 const anh_dai_dien_id = data_User.anh_dai_dien.split('id=');
-//         //                 if (anh_dai_dien_id.length >= 2) {
-//         //                     await drive.files.delete({ fileId: anh_dai_dien_id.pop() });
-//         //                 }
-//         //             }
-    
-//         //             const [data_updateUser] = await model.nguoi_dung.update(
-//         //                 { 
-//         //                     ...dataBody, 
-//         //                     anh_dai_dien: `https://drive.google.com/thumbnail?id=${response_create.data.id}`
-//         //                 }, 
-//         //                 {
-//         //                     where: {
-//         //                         nguoi_dung_id: nguoi_dung_id,
-//         //                         email: email
-//         //                     },
-//         //                 }
-//         //             );
-
-//         //             if (data_updateUser == 1) {
-//         //                 let data_updatedUser = await model.hinh_anh.findOne({
-//         //                     where: {
-//         //                         nguoi_dung_id: nguoi_dung_id,
-//         //                         email: email
-//         //                     },
-//         //                     raw: true,
-//         //                     nest: true
-//         //                 });
+        }else{
+            return responseData(404, res, "post", null, "Thông lưu không đúng");
+        }
         
-//         //              const access_token = data_updatedUser ? generateAccessToken(data_updatedUser) : null;
-//         //             const refresh_token = data_updatedUser ? generateRefreshToken(data_updatedUser) : null;
+    } catch (error) {
+        return responseData(500, res, "post", error.message, "Xảy ra lỗi nội bộ");
+    }
+};
+
+
+
+
+
+
+const getAllSavedImageByUserId = async (req, res) => {
+    try {
+        const {  nguoi_dung_id } = req.params;
+
+        // const data_User = await model.nguoi_dung.findOne({
+        //     where: { nguoi_dung_id: nguoi_dung_id },
+        // });
+
+        // if (!data_User) {
+        //     return responseData(404, res, "post", null, "Không tìm thấy người dùng");
+        // }
+       
+
+        let data_getAllSavedImageByUserId = await model.luu_anh.findAll({
+            where: { nguoi_dung_id: nguoi_dung_id },
+            include: [
+                {
+                    model: model.hinh_anh,
+                    as: 'hinh'
+                },
+                {
+                    model: model.nguoi_dung,
+                    as: 'nguoi_dung'
+                }
+            ],
+            nest: true
+        });
+
+
+      
+
+        // let data_getAllSavedImageByUserId= await model.luu_anh.findAll({
+        //     where: { nguoi_dung_id: nguoi_dung_id },
+        //     include:['hinh','nguoi_dung'],
+        //     nest: true
+        // });
+
+        return responseData(200, res, "post", data_getAllSavedImageByUserId, "Đã lấy tất cả ảnh người dùng đã lưu");
+
+
+      
+ư
+
         
-//         //             if (access_token != null) {
-        
-//         //                 res.cookie('access_token', access_token, {
-//         //                     expires: new Date(
-//         //                         Date.now() + process.env.EXPIRE_IN * 24 * 60 * 60 * 1000
-//         //                     ),
-//         //                     httpOnly: true,
-//         //                     secure: true,
-//         //                     // // sameSite: 'strict',
-//         //                     path: '/',
-//         //                     sameSite: "None"
-//         //                 })
-        
-//         //                 res.cookie('refresh_token', refresh_token, {
-//         //                     // expires: new Date (
-//         //                     //     Date.now() + process.env.EXPIRE_IN * 24 * 60 * 60 * 1000
-//         //                     //     ),
-//         //                     httpOnly: true,
-//         //                     secure: true,
-//         //                     // // sameSite: 'strict',
-//         //                     path: '/',
-//         //                     sameSite: "None"
-//         //                 })
-//         //             }
-        
-        
-//         //             data_updatedUser = { ...data_updatedUser, access_token: access_token, refresh_token: refresh_token }
-//         //                 return responseData("200", res, "put", data_updatedUser, "Đã cập nhật thông tin thành công");
-//         //             } else {
-//         //                 return responseData("400", res, "put", null, "Chưa cập nhật thông tin");
-//         //             }
-
-                    
-    
-//         //             return responseData("200", res, "post", data_updateUser, "Đã cập nhật người dùng thành công");
-//         //         }
-           
+    } catch (error) {
+        return responseData(500, res, "post", error.message, "Xảy ra lỗi nội bộ");
+    }
+};
 
 
-//         // } 
-        
-//         // else if(image==undefined){
-
-//         //     const { anh_dai_dien, ...newDataBody } = dataBody;
-
-//         //     const [data_updateUser] = await model.hinh_anh.update({ ...newDataBody }, {
-//         //         where: {
-//         //             nguoi_dung_id: nguoi_dung_id,
-//         //             email: email
-//         //         },
-//         //     });
-
-//         //     if (data_updateUser == 1) {
-//         //         let data_updatedUser = await model.hinh_anh.findOne({
-//         //             where: {
-//         //                 nguoi_dung_id: nguoi_dung_id,
-//         //                 email: email
-//         //             },
-//         //             raw: true,
-//         //             nest: true
-//         //         });
-
-//         //              const access_token = data_updatedUser ? generateAccessToken(data_updatedUser) : null;
-//         //     const refresh_token = data_updatedUser ? generateRefreshToken(data_updatedUser) : null;
-
-//         //     if (access_token != null) {
-
-//         //         res.cookie('access_token', access_token, {
-//         //             expires: new Date(
-//         //                 Date.now() + process.env.EXPIRE_IN * 24 * 60 * 60 * 1000
-//         //             ),
-//         //             httpOnly: true,
-//         //             secure: true,
-//         //             // // sameSite: 'strict',
-//         //             path: '/',
-//         //             sameSite: "None"
-//         //         })
-
-//         //         res.cookie('refresh_token', refresh_token, {
-//         //             // expires: new Date (
-//         //             //     Date.now() + process.env.EXPIRE_IN * 24 * 60 * 60 * 1000
-//         //             //     ),
-//         //             httpOnly: true,
-//         //             secure: true,
-//         //             // // sameSite: 'strict',
-//         //             path: '/',
-//         //             sameSite: "None"
-//         //         })
-//         //     }
 
 
-//         //     data_updatedUser = { ...data_updatedUser, access_token: access_token, refresh_token: refresh_token }
-//         //         return responseData("200", res, "put", data_updatedUser, "Đã cập nhật thông tin thành công");
-//         //     } else {
-//         //         return responseData("400", res, "put", null, "Chưa cập nhật thông tin");
-//         //     }
-
-           
-//         // } 
-//         // else {
-//         //     const [data_updateUser] = await model.nguoi_dung.update({ ...dataBody }, {
-//         //         where: {
-//         //             nguoi_dung_id: nguoi_dung_id,
-//         //             email: email
-//         //         },
-//         //     });
-
-//         //     if (data_updateUser == 1) {
-//         //         let data_updatedUser = await model.nguoi_dung.findOne({
-//         //             where: {
-//         //                 nguoi_dung_id: nguoi_dung_id,
-//         //                 email: email
-//         //             },
-//         //             raw: true,
-//         //             nest: true
-//         //         });
-
-//         //       const access_token = data_updatedUser ? generateAccessToken(data_updatedUser) : null;
-//         //     const refresh_token = data_updatedUser ? generateRefreshToken(data_updatedUser) : null;
-
-//         //     if (access_token != null) {
-
-//         //         res.cookie('access_token', access_token, {
-//         //             expires: new Date(
-//         //                 Date.now() + process.env.EXPIRE_IN * 24 * 60 * 60 * 1000
-//         //             ),
-//         //             httpOnly: true,
-//         //             secure: true,
-//         //             // // sameSite: 'strict',
-//         //             path: '/',
-//         //             sameSite: "None"
-//         //         })
-
-//         //         res.cookie('refresh_token', refresh_token, {
-//         //             // expires: new Date (
-//         //             //     Date.now() + process.env.EXPIRE_IN * 24 * 60 * 60 * 1000
-//         //             //     ),
-//         //             httpOnly: true,
-//         //             secure: true,
-//         //             // // sameSite: 'strict',
-//         //             path: '/',
-//         //             sameSite: "None"
-//         //         })
-//         //     }
-
-
-//         //     data_updatedUser = { ...data_updatedUser, access_token: access_token, refresh_token: refresh_token }
-//         //         return responseData("200", res, "put", data_updatedUser, "Đã cập nhật thông tin thành công");
-//         //     } else {
-//         //         return responseData("400", res, "put", null, "Chưa cập nhật thông tin");
-//         //     }
-//         // }
-//     } catch (error) {
-//         return responseData("400", res, "put", error.message, "Xảy ra lỗi nội bộ");
-//     }
-// };
 
 
 
 export {
-    getAllImage,getOneImageByImageId,getOneImageByUserId,addImage,deleteImage,updateImage,findImageByImageName
+    getAllImage,getOneImageByImageId,getOneImageByUserId,addImage,deleteImage,updateImage,findImageByImageName,saveImage,getAllSavedImageByUserId
 }

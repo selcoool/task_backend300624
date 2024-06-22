@@ -13,7 +13,18 @@ const getAllComment = async (req, res) => {
     try {
 
         let data_getAllComment = await model.binh_luan.findAll({
-            include: ['nguoi_dung','hinh'],
+            // include: ['nguoi_dung','hinh'],
+            include: [
+                {
+                   model: model.nguoi_dung,
+                   as: 'nguoi_dung'
+                },
+                {
+                    model: model.hinh_anh,
+                    as: 'hinh'
+                 }
+            ],
+            
             nest: true,
 
         });
@@ -180,6 +191,10 @@ const deleteComment = async (req, res) => {
     }
 
 }
+
+
+
+
 
 
 

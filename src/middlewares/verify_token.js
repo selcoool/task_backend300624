@@ -22,8 +22,8 @@ export const verifyToken =(req,res, next)=>{
        jwt.verify(accessToken, process.env.JWT_ACCESS_KEY, function (err, user) {
         if (err) {
         //   return res.status(403).send({ message: "Token is invalid" });
-          responseData("403", res, "get", err, "Token hết giá trị")
-        }else{
+          responseData("403", res, "null", err, "Token hết giá trị")
+        }else {
 
           next()
         }
@@ -34,7 +34,7 @@ export const verifyToken =(req,res, next)=>{
         
     }else{
         // return res.status(404).json('The authemtication')
-        responseData("404", res, "get", user, "Quyền truy cập")
+        responseData("404", res, "null", null, "Chỉ có quyền khi đăng nhập")
     }
 
 }
