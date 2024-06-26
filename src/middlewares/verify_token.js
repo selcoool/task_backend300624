@@ -22,7 +22,7 @@ export const verifyToken =(req,res, next)=>{
        jwt.verify(accessToken, process.env.JWT_ACCESS_KEY, function (err, user) {
         if (err) {
         //   return res.status(403).send({ message: "Token is invalid" });
-          responseData("403", res, "null", err, "Token hết giá trị")
+          responseData("403", res, null, null, "Token hết giá trị")
         }else {
 
           next()

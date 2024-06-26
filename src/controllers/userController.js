@@ -56,7 +56,14 @@ const getOneUser = async (req, res) => {
         });
 
 
-        responseData("200", res, "get", data_getOneUser, "Đã lấy thông tin một người dùng thành công")
+        if(data_getOneUser.length>0){
+            responseData("200", res, "get", data_getOneUser, "Đã lấy thông tin một người dùng thành công")
+        }else{
+            responseData("400", res, "get", null, "Không tìm thấy người dùng với id này")
+        }
+
+
+       
 
     } catch (error) {
         responseData("400", res, "get", error.message, "Xảy ra lỗi nội bộ")
@@ -88,7 +95,7 @@ const generateRefreshToken = (checkUser) => {
         ho_ten: checkUser.ho_ten,
         tuoi: checkUser.tuoi,
 
-    }, process.env.JWT_REFRESH_KEY, { expiresIn: '365d' })
+    }, process.env.JWT_REFRESH_KEY, { expiresIn: '3d' })
 }
 
 
@@ -301,6 +308,8 @@ const updateUser = async (req, res) => {
         const dataBody = req.body;
         const { nguoi_dung_id } = req.body;
 
+        console.log('ssssss',dataBody)
+
         let avatar = req.files?.anh_dai_dien;
        
 
@@ -390,6 +399,245 @@ const updateUser = async (req, res) => {
         
         
                     data_updatedUser = { ...data_updatedUser, access_token: access_token, refresh_token: refresh_token }
+                        return responseData("200", res, "post", data_updatedUser, "Đã cập nhật thông tin thành công");
+                    } else {
+                        return responseData("400", res, "post", null, "Chưa cập nhật thông tin");
+                    }
+
+                    
+    
+                    return responseData("200", res, "post", data_updateUser, "Đã cập nhật người dùng thành công");
+                }
+           
+
+
+        } 
+        
+        else if(avatar==undefined){
+
+            const { anh_dai_dien, ...newDataBody } = dataBody;
+
+            const [data_updateUser] = await model.nguoi_dung.update({ ...newDataBody }, {
+                where: {
+                    nguoi_dung_id: nguoi_dung_id,
+            
+                },
+            });
+
+            if (data_updateUser == 1) {
+                let data_updatedUser = await model.nguoi_dung.findOne({
+                    where: {
+                        nguoi_dung_id: nguoi_dung_id
+                    },
+                    raw: true,
+                    nest: true
+                });
+
+                     const access_token = data_updatedUser ? generateAccessToken(data_updatedUser) : null;
+            const refresh_token = data_updatedUser ? generateRefreshToken(data_updatedUser) : null;
+
+            if (access_token != null) {
+
+                res.cookie('access_token', access_token, {
+                    // expires: new Date(
+                    //     Date.now() + process.env.EXPIRE_IN * 24 * 60 * 60 * 1000
+                    // ),
+                    // httpOnly: true,
+                    // secure: true,
+                    // // // sameSite: 'strict',
+                    // path: '/',
+                    // sameSite: "None"
+
+                    path: '/',
+                    secure: true,
+                    sameSite: 'strict',
+                    // sameSite: 'None'
+
+                })
+
+                res.cookie('refresh_token', refresh_token, {
+                    // expires: new Date (
+                    //     Date.now() + process.env.EXPIRE_IN * 24 * 60 * 60 * 1000
+                    //     ),
+                    // httpOnly: true,
+                    // secure: true,
+                    // // // sameSite: 'strict',
+                    // path: '/',
+                    // sameSite: "None"
+
+                    path: '/',
+                    secure: true,
+                    sameSite: 'strict',
+                    // sameSite: 'None'
+                })
+            }
+
+
+            data_updatedUser = { ...data_updatedUser, access_token: access_token, refresh_token: refresh_token }
+                return responseData("200", res, "post", data_updatedUser, "Đã cập nhật thông tin thành công");
+            } else {
+                return responseData("400", res, "post", null, "Chưa cập nhật thông tin");
+            }
+
+           
+        } 
+        else {
+            const [data_updateUser] = await model.nguoi_dung.update({ ...dataBody }, {
+                where: {
+                    nguoi_dung_id: nguoi_dung_id,
+                    email: email
+                },
+            });
+
+            if (data_updateUser == 1) {
+                let data_updatedUser = await model.nguoi_dung.findOne({
+                    where: {
+                        nguoi_dung_id: nguoi_dung_id,
+                        email: email
+                    },
+                    raw: true,
+                    nest: true
+                });
+
+              const access_token = data_updatedUser ? generateAccessToken(data_updatedUser) : null;
+            const refresh_token = data_updatedUser ? generateRefreshToken(data_updatedUser) : null;
+
+            if (access_token != null) {
+
+                res.cookie('access_token', access_token, {
+                    expires: new Date(
+                        Date.now() + process.env.EXPIRE_IN * 24 * 60 * 60 * 1000
+                    ),
+                    httpOnly: true,
+                    secure: true,
+                    // // sameSite: 'strict',
+                    path: '/',
+                    sameSite: "None"
+                })
+
+                res.cookie('refresh_token', refresh_token, {
+                    // expires: new Date (
+                    //     Date.now() + process.env.EXPIRE_IN * 24 * 60 * 60 * 1000
+                    //     ),
+                    httpOnly: true,
+                    secure: true,
+                    // // sameSite: 'strict',
+                    path: '/',
+                    sameSite: "None"
+                })
+            }
+
+
+            data_updatedUser = { ...data_updatedUser, access_token: access_token, refresh_token: refresh_token }
+                return responseData("200", res, "post", data_updatedUser, "Đã cập nhật thông tin thành công");
+            } else {
+                return responseData("400", res, "post", null, "Chưa cập nhật thông tin");
+            }
+        }
+    } catch (error) {
+        return responseData("400", res, "post", error.message, "Xảy ra lỗi nội bộ");
+    }
+};
+
+
+
+const updateUserInfor = async (req, res) => {
+    try {
+        const drive = getDrive();
+        const {email,...dataBody} = req.body;
+        const { nguoi_dung_id } = req.body;
+
+        console.log('ssssss',dataBody)
+
+        let avatar = req.files?.anh_dai_dien;
+       
+
+        // console.log('sssssssss',avatar &&  avatar.length>0)
+        let data_User = await model.nguoi_dung.findOne({
+            where: { 
+                nguoi_dung_id: nguoi_dung_id 
+            }
+        });
+
+        if (!data_User) {
+            return responseData("400", res, "put", null, "Không tồn tại người dùng này");
+        }
+
+        if (avatar && avatar.length > 0) {
+
+          
+                for (const file of avatar) {
+                    const bufferStream = new Readable();
+                    bufferStream.push(file.buffer);
+                    bufferStream.push(null);
+    
+                    let response_create = await drive.files.create({
+                        requestBody: {
+                            name: file.originalname,
+                            parents: ["1q_oPecVEnB4_7V1HHOegwzaVmTNmFVx_"]
+                        },
+                        media: {
+                            mimeType: file.mimetype,
+                            body: bufferStream,
+                        },
+                        fields: '*'
+                    });
+    
+                    if (data_User.anh_dai_dien) {
+                        const anh_dai_dien_id = data_User.anh_dai_dien.split('id=');
+                        if (anh_dai_dien_id.length >= 2) {
+                            await drive.files.delete({ fileId: anh_dai_dien_id.pop() });
+                        }
+                    }
+    
+                    const [data_updateUser] = await model.nguoi_dung.update(
+                        { 
+                            ...dataBody, 
+                            anh_dai_dien: `https://drive.google.com/thumbnail?id=${response_create.data.id}`
+                        }, 
+                        {
+                            where: {
+                                nguoi_dung_id: nguoi_dung_id,
+                           
+                            },
+                        }
+                    );
+
+                    if (data_updateUser == 1) {
+                        let data_updatedUser = await model.nguoi_dung.findOne({
+                            where: {
+                                nguoi_dung_id: nguoi_dung_id,
+                            },
+                            raw: true,
+                            nest: true
+                        });
+        
+                     const access_token = data_updatedUser ? generateAccessToken(data_updatedUser) : null;
+                    const refresh_token = data_updatedUser ? generateRefreshToken(data_updatedUser) : null;
+        
+                    if (access_token != null) {
+        
+                        res.cookie('access_token', access_token, {
+                            expires: new Date(
+                                Date.now() + process.env.EXPIRE_IN * 24 * 60 * 60 * 1000
+                            ),
+                            path: '/',
+                            secure: true,
+                            sameSite: 'None'
+                        })
+        
+                        res.cookie('refresh_token', refresh_token, {
+                            // expires: new Date (
+                            //     Date.now() + process.env.EXPIRE_IN * 24 * 60 * 60 * 1000
+                            //     ),
+                            path: '/',
+                            secure: true,
+                            sameSite: 'None'
+                        })
+                    }
+        
+        
+                    data_updatedUser = { ...data_updatedUser, access_token: access_token, refresh_token: refresh_token }
                         return responseData("200", res, "put", data_updatedUser, "Đã cập nhật thông tin thành công");
                     } else {
                         return responseData("400", res, "put", null, "Chưa cập nhật thông tin");
@@ -397,7 +645,7 @@ const updateUser = async (req, res) => {
 
                     
     
-                    return responseData("200", res, "post", data_updateUser, "Đã cập nhật người dùng thành công");
+                    return responseData("200", res, "put", data_updateUser, "Đã cập nhật người dùng thành công");
                 }
            
 
@@ -694,5 +942,5 @@ const requestRefreshToken = async (req, res) => {
 
 
 export {
-    getAllUser,getOneUser, registerUser, loginUser, updateUser, deleteUser, signOutUser,requestRefreshToken
+    getAllUser,getOneUser, registerUser, loginUser, updateUser, deleteUser, signOutUser,requestRefreshToken,updateUserInfor
 }

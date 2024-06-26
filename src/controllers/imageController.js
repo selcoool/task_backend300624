@@ -37,7 +37,47 @@ const getAllImage = async (req, res) => {
 
 
 
-const getOneImageByImageId = async (req, res) => {
+const getOneImageWithUserByImageId = async (req, res) => {
+
+    try {
+
+        const { hinh_id } = req.params;
+
+        let data_getOneImageByImageId= await model.hinh_anh.findAll({
+            where: { hinh_id: hinh_id },
+            include: [
+              
+                {
+                    model: model.nguoi_dung,
+                    as: 'nguoi_dung'
+                }
+                
+            ],
+          
+            // include: ['binh_luans'],
+            nest: true
+        });
+
+        if(data_getOneImageByImageId.length>0){
+            responseData("200", res, "get", data_getOneImageByImageId, "Đã lấy thông tin hình ảnh dựa vào id ảnh thành công")
+        }else{
+            responseData("400", res, "get", null, "Thông tin hình ảnh dựa vào id ảnh không đúng")
+        }
+
+
+       
+
+    } catch (error) {
+        responseData("400", res, "get", error.message, "Xảy ra lỗi nội bộ")
+    }
+
+
+
+
+}
+
+
+const getOneImageWithCommentByImageId = async (req, res) => {
 
     try {
 
@@ -50,6 +90,8 @@ const getOneImageByImageId = async (req, res) => {
                    model: model.binh_luan,
                    as: 'binh_luans'
                 }
+                
+                
             ],
           
             // include: ['binh_luans'],
@@ -105,18 +147,28 @@ const findImageByImageName = async (req, res) => {
     try {
         const { ten_hinh } = req.query;
 
+        console.log('ssssssssssssssss',ten_hinh)
+
         let queryOptions = {};
+        
         if (ten_hinh) {
             queryOptions = {
                 where: {
                     ten_hinh: {
+                       
                         [Op.substring]: ten_hinh,
                     },
                 },
+                include: [
+                    {
+                       model: model.nguoi_dung,
+                       as: 'nguoi_dung'
+                    }
+                ]
             };
         }
 
-        let data_findImageByImageName = await model.hinh_anh.findAll({queryOptions, include: ['nguoi_dung']});
+        let data_findImageByImageName = await model.hinh_anh.findAll(queryOptions);
 
         responseData("200", res, "get", data_findImageByImageName, "Đã lấy hình ảnh dựa tên hình ảnh thành công");
     } catch (error) {
@@ -458,9 +510,11 @@ const saveImage = async (req, res) => {
 
 
 
-const getAllSavedImageByUserId = async (req, res) => {
+const isSavedImage = async (req, res) => {
     try {
-        const {  nguoi_dung_id } = req.params;
+        const {  hinh_id } = req.params;
+
+        // console.log('ssssssss',hinh_id)
 
         // const data_User = await model.nguoi_dung.findOne({
         //     where: { nguoi_dung_id: nguoi_dung_id },
@@ -471,8 +525,8 @@ const getAllSavedImageByUserId = async (req, res) => {
         // }
        
 
-        let data_getAllSavedImageByUserId = await model.luu_anh.findAll({
-            where: { nguoi_dung_id: nguoi_dung_id },
+        let data_isSavedImage = await model.luu_anh.findAll({
+            where: { hinh_id: hinh_id },
             include: [
                 {
                     model: model.hinh_anh,
@@ -487,19 +541,21 @@ const getAllSavedImageByUserId = async (req, res) => {
         });
 
 
+       if(data_isSavedImage.length>0){
+
+        return responseData(200, res, "post", data_isSavedImage, "Người dùng đã lưu hình ảnh với id này");
+
+       }else{
+        return responseData(400, res, "post", null, "Người dùng vẫn chưa lưu hình ảnh với id này");
+       }
+
+     
+
+       
+
+
       
 
-        // let data_getAllSavedImageByUserId= await model.luu_anh.findAll({
-        //     where: { nguoi_dung_id: nguoi_dung_id },
-        //     include:['hinh','nguoi_dung'],
-        //     nest: true
-        // });
-
-        return responseData(200, res, "post", data_getAllSavedImageByUserId, "Đã lấy tất cả ảnh người dùng đã lưu");
-
-
-      
-ư
 
         
     } catch (error) {
@@ -510,9 +566,93 @@ const getAllSavedImageByUserId = async (req, res) => {
 
 
 
+const getAllSavedImageByUserId = async (req, res) => {
+    try {
+        const {  nguoi_dung_id } = req.params;
+
+      
+       
+
+        let data_getAllSavedImageByUserId = await model.luu_anh.findAll({
+            where: { nguoi_dung_id: nguoi_dung_id },
+            include: [
+                {
+                    model: model.hinh_anh,
+                    as: 'hinh'
+                }
+            ],
+            nest: true
+        });
+
+
+      if(data_getAllSavedImageByUserId.length>0){
+        return responseData(200, res, "get", data_getAllSavedImageByUserId, "Đã lấy danh sách tất cả ảnh người dùng đã lưu");
+      }else{
+        return responseData(400, res, "get", null, "Không tìm thấy hình ảnh người dùng đã lưu");
+      }
+
+
+
+       
+
+
+      
+ư
+
+        
+    } catch (error) {
+        return responseData(500, res, "get", error.message, "Xảy ra lỗi nội bộ");
+    }
+};
+
+
+
+
+const getAllImageByUserId = async (req, res) => {
+    try {
+        const {  nguoi_dung_id } = req.params;
+
+      
+       
+
+        let data_getAllImageByUserId = await model.hinh_anh.findAll({
+            where: { nguoi_dung_id: nguoi_dung_id },
+            include: [
+                {
+                    model: model.nguoi_dung,
+                    as: 'nguoi_dung'
+                }
+            ],
+            nest: true
+        });
+
+
+      if(data_getAllImageByUserId.length>0){
+        return responseData(200, res, "get", data_getAllImageByUserId, "Đã lấy danh sách tất cả ảnh người dùng đã lưu");
+      }else{
+        return responseData(400, res, "get", null, "Không tìm thấy hình ảnh người dùng đã lưu");
+      }
+
+
+
+       
+
+
+      
+ư
+
+        
+    } catch (error) {
+        return responseData(500, res, "get", error.message, "Xảy ra lỗi nội bộ");
+    }
+};
+
+
+
+
 
 
 
 export {
-    getAllImage,getOneImageByImageId,getOneImageByUserId,addImage,deleteImage,updateImage,findImageByImageName,saveImage,getAllSavedImageByUserId
+    getAllImage,getOneImageWithUserByImageId,getOneImageWithCommentByImageId,getOneImageByUserId,addImage,deleteImage,updateImage,findImageByImageName,saveImage,getAllSavedImageByUserId,isSavedImage,getAllImageByUserId
 }
