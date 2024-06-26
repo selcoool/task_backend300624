@@ -1,0 +1,502 @@
+{
+	"info": {
+		"_postman_id": "3fc46555-82c1-4138-85c3-b986e07932f6",
+		"name": "NodeJS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28094189"
+	},
+	"item": [
+		{
+			"name": "đăng ký người dùng",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "minhthanh1@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "mat_khau",
+							"value": "300@minhthanh",
+							"type": "text"
+						},
+						{
+							"key": "ho_ten",
+							"value": "Tran Minh Thanh",
+							"type": "text"
+						},
+						{
+							"key": "tuoi",
+							"value": "5",
+							"type": "text"
+						},
+						{
+							"key": "anh_dai_dien",
+							"type": "file",
+							"src": "postman-cloud:///1ef3308e-2406-4280-9c95-80787d70b4d3"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3001/nguoi-dung/dang-ky",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"nguoi-dung",
+						"dang-ky"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "đăng nhập người dùng",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "minhthanh1@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "mat_khau",
+							"value": "300@minhthanh",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3001/nguoi-dung/dang-nhap",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"nguoi-dung",
+						"dang-nhap"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "lấy danh sách hình ảnh",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZ3VvaV9kdW5nX2lkIjozNCwiZW1haWwiOiJtaW5odGhhbmgxQGdtYWlsLmNvbSIsIm1hdF9raGF1IjoiJDJhJDEwJGFZM2FhcURhaGYxdFJGR1IyWURhek82RmhWdm4uMXBpY214L2hVVW1ja1cuaWh1U1NCcktHIiwiaG9fdGVuIjoiVHJhbiBNaW5oIFRoYW5oIiwidHVvaSI6NSwiaWF0IjoxNzE5NDIwMjIxLCJleHAiOjE3MTk0MjAyODF9.GeDv7nC7z6uSKN-nAJNNlueimAaVJOY6Koqgi8GgEXY",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3001/hinh-anh/tat-ca-hinh-anh",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"hinh-anh",
+						"tat-ca-hinh-anh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tìm kiếm ảnh theo tên hình",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "http://localhost:3001/hinh-anh/tim-kiem-hinh-anh-dua-ten-hinh?ten_hinh=image 9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"hinh-anh",
+						"tim-kiem-hinh-anh-dua-ten-hinh"
+					],
+					"query": [
+						{
+							"key": "ten_hinh",
+							"value": "image 9"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "lấy thông tin ảnh cùng người tạo dựa vào id ảnh",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/hinh-anh/thong-tin-hinh-anh-cung-nguoi-tao-dua-hinh-id/1200",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"hinh-anh",
+						"thong-tin-hinh-anh-cung-nguoi-tao-dua-hinh-id",
+						"1200"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "lấy thông tin ảnh cùng bình luận dựa vào id ảnh",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/hinh-anh/thong-tin-hinh-anh-cung-binh-luan-dua-hinh-id/14",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"hinh-anh",
+						"thong-tin-hinh-anh-cung-binh-luan-dua-hinh-id",
+						"14"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "lấy thông tin bình luận dựa vào id hình",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/binh-luan/thong-tin-binh-luan-dua-hinh-id/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"binh-luan",
+						"thong-tin-binh-luan-dua-hinh-id",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "lấy thông tin hình ảnh đã lưu hay chưa dựa vào id hình ảnh",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/hinh-anh/luu-hinh-anh-chua-dua-vao-hinh-anh-id/4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"hinh-anh",
+						"luu-hinh-anh-chua-dua-vao-hinh-anh-id",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "lưu thông tin bình luận với hình ảnh",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "nguoi_dung_id",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "hinh_id",
+							"value": "14",
+							"type": "text"
+						},
+						{
+							"key": "noi_dung",
+							"value": "new comment",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3001/binh-luan/them-binh-luan",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"binh-luan",
+						"them-binh-luan"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "lấy thông tin người dùng cùng với hình ảnh",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZ3VvaV9kdW5nX2lkIjozNCwiZW1haWwiOiJtaW5odGhhbmgxQGdtYWlsLmNvbSIsIm1hdF9raGF1IjoiJDJhJDEwJGFZM2FhcURhaGYxdFJGR1IyWURhek82RmhWdm4uMXBpY214L2hVVW1ja1cuaWh1U1NCcktHIiwiaG9fdGVuIjoiVHJhbiBNaW5oIFRoYW5oIiwidHVvaSI6NSwiaWF0IjoxNzE5NDIyNDIwLCJleHAiOjE3MTk0MjI0ODB9.oqi7Ev1pveMCBu5SSZA4sQEdA5zbSYF51i_mFjgvKfQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3001/nguoi-dung/thong-tin-nguoi-dung/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"nguoi-dung",
+						"thong-tin-nguoi-dung",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "lấy danh sách ảnh đã lưu dựa vào id người dùng",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZ3VvaV9kdW5nX2lkIjozNCwiZW1haWwiOiJtaW5odGhhbmgxQGdtYWlsLmNvbSIsIm1hdF9raGF1IjoiJDJhJDEwJGFZM2FhcURhaGYxdFJGR1IyWURhek82RmhWdm4uMXBpY214L2hVVW1ja1cuaWh1U1NCcktHIiwiaG9fdGVuIjoiVHJhbiBNaW5oIFRoYW5oIiwidHVvaSI6NSwiaWF0IjoxNzE5NDE5OTAzLCJleHAiOjE3MTk0MTk5NjN9.Q_jF1uJdUSE37auIzIknGkvpzEIljP4xwBfeVKRhW30",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3001/hinh-anh/tat-ca-hinh-anh-da-luu-dua-nguoi-dung-id/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"hinh-anh",
+						"tat-ca-hinh-anh-da-luu-dua-nguoi-dung-id",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "lấy danh sách ảnh đã tạo dựa vào id người dùng",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZ3VvaV9kdW5nX2lkIjozNCwiZW1haWwiOiJtaW5odGhhbmgxQGdtYWlsLmNvbSIsIm1hdF9raGF1IjoiJDJhJDEwJGFZM2FhcURhaGYxdFJGR1IyWURhek82RmhWdm4uMXBpY214L2hVVW1ja1cuaWh1U1NCcktHIiwiaG9fdGVuIjoiVHJhbiBNaW5oIFRoYW5oIiwidHVvaSI6NSwiaWF0IjoxNzE5NDE5OTgxLCJleHAiOjE3MTk0MjAwNDF9.0GYuYAVCG_oeKXKwehXOlT44D_xaV7Ow0QIzzbs-_f4",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3001/hinh-anh/tat-ca-hinh-anh-dua-nguoi-dung-id/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"hinh-anh",
+						"tat-ca-hinh-anh-dua-nguoi-dung-id",
+						"5"
+					],
+					"query": [
+						{
+							"key": "authorization",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "xóa hình ảnh",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZ3VvaV9kdW5nX2lkIjozNCwiZW1haWwiOiJtaW5odGhhbmgxQGdtYWlsLmNvbSIsIm1hdF9raGF1IjoiJDJhJDEwJGFZM2FhcURhaGYxdFJGR1IyWURhek82RmhWdm4uMXBpY214L2hVVW1ja1cuaWh1U1NCcktHIiwiaG9fdGVuIjoiVHJhbiBNaW5oIFRoYW5oIiwidHVvaSI6NSwiaWF0IjoxNzE5NDIwMjA0LCJleHAiOjE3MTk0MjAyNjR9.a6M1eOj-QNm0u_ctWqe3iwOEZZtZ5TAPoZaQbAD6SNo",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3001/hinh-anh/xoa-hinh-anh/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"hinh-anh",
+						"xoa-hinh-anh",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cập nhật ảnh đại diện của người dùng",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZ3VvaV9kdW5nX2lkIjozNCwiZW1haWwiOiJtaW5odGhhbmgxQGdtYWlsLmNvbSIsIm1hdF9raGF1IjoiJDJhJDEwJGFZM2FhcURhaGYxdFJGR1IyWURhek82RmhWdm4uMXBpY214L2hVVW1ja1cuaWh1U1NCcktHIiwiaG9fdGVuIjoiVHJhbiBNaW5oIFRoYW5oIiwidHVvaSI6NSwiaWF0IjoxNzE5NDIyMDA3LCJleHAiOjE3MTk0MjIwNjd9.RRBjRc1DmvlpB60oNbG1MAAE_CLwzOOdJipxNf5KAbE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "anh_dai_dien",
+							"type": "file",
+							"src": [],
+							"disabled": true
+						},
+						{
+							"key": "nguoi_dung_id",
+							"value": "5",
+							"type": "text"
+						},
+						{
+							"key": "anh_dai_dien",
+							"type": "file",
+							"src": [],
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3001/nguoi-dung/cap-nhat",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"nguoi-dung",
+						"cap-nhat"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cập nhật thông tin người dùng",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZ3VvaV9kdW5nX2lkIjozNCwiZW1haWwiOiJtaW5odGhhbmgxQGdtYWlsLmNvbSIsIm1hdF9raGF1IjoiJDJhJDEwJGFZM2FhcURhaGYxdFJGR1IyWURhek82RmhWdm4uMXBpY214L2hVVW1ja1cuaWh1U1NCcktHIiwiaG9fdGVuIjoiVHJhbiBNaW5oIFRoYW5oIiwidHVvaSI6NSwiaWF0IjoxNzE5NDIyMzM3LCJleHAiOjE3MTk0MjIzOTd9.y0pRM5QQsagC-Az2RX5GrY5q28xQJa8T0DWOt1Yzk9E",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "nguoi_dung_id",
+							"value": "5",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "user9@example.com",
+							"type": "text"
+						},
+						{
+							"key": "mat_khau",
+							"value": "159753",
+							"type": "text"
+						},
+						{
+							"key": "ho_ten",
+							"value": "Tran Minh Tahnh",
+							"type": "text"
+						},
+						{
+							"key": "tuoi",
+							"value": "298",
+							"type": "text"
+						},
+						{
+							"key": "anh_dai_dien",
+							"type": "file",
+							"src": "postman-cloud:///1ef33e04-d300-4be0-bf86-ab036b21a5ae"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3001/nguoi-dung/cap-nhat-thong-tin-nguoi-dung",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"nguoi-dung",
+						"cap-nhat-thong-tin-nguoi-dung"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
