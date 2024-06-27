@@ -14,7 +14,7 @@ var  corsOptions  = {
   methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
   exposedHeaders:'Content-Range, X-Content-Range'
 }
-.
+
 
 app.use(cors(corsOptions));
 
